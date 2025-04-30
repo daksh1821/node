@@ -1,6 +1,13 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const func1 = ()=> console.log('func1');
+const func2 = ()=> console.log('func2');
+const func3 = ()=> {console.log('func3');
+  func1();
+  func2();
+}
+func3();
 
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
