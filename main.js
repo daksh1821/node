@@ -1,21 +1,21 @@
 const EventEmitter = require('events');
 const myEvent = new EventEmitter();
-myEvent.on('test-event', () => {
-    console.log('test-event triggered');
-});
 const express = require('express');
+const bodyparser = require('body-parser');
 const app = express();
-const PORT = 3001;
-
-app.get('/', (req, res) => {
-    myEvent.emit('test-event');
-    res.send("Hello World");
-});
-app.post('/test', (req, res) => {
-    myEvent.emit('test-event');
-    res.send("Test event triggered");
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
-});
+app.use(bodyparser.json());
+app.use(express.json());
+const PORT = 3000;
+const routes = require('./routes/index');
+const connectDB = require('./database/db');
+app.set('view engine', 'pug');
+app.use(routes);
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to connect to MongoDB:', err);
+  });
